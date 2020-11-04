@@ -51,17 +51,3 @@ pub fn insert_todo(path: &str, todo_item: String) -> Result<TaskStatus> {
 fn format_todo_item(todo_item: String) -> String {
     format!("[ ] - {}", todo_item)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn can_run_the_app() {
-        let path = "/aUsers/hilesha/self/rust/todo/src/todos.data";
-        let todo_items = get_todo_list(path).unwrap();
-        assert_eq!(2, todo_items.len());
-        assert_eq!("[ ] - make a todo list application", todo_items[0]);
-        assert_eq!("[ ] - play the drop game", todo_items[1]);
-    }
-}
