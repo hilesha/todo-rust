@@ -1,7 +1,9 @@
+use rustbreak::{deser::Ron, FileDatabase};
+use std::collections::HashMap;
 use std::convert::TryFrom;
 use structopt::StructOpt;
 use todo;
-use todo::{Error, TaskStatus};
+use todo::{Error, TaskStatus, Todo};
 
 #[derive(Debug, StructOpt)]
 struct Opt {
