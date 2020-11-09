@@ -11,14 +11,17 @@ struct Opt {
     file_path: String,
     #[structopt(name = "command", short = "c", long = "command")]
     command: String,
-    #[structopt(short = "t", long = "task", default_value = "")]
-    todo: String,
+    #[structopt(name = "task", short = "t", long = "task")]
+    todo: Option<String>,
+    #[structopt(name = "id", short = "id", long = "id")]
+    id: Option<String>,
 }
 
 enum Command {
     List,
     Add,
     Delete,
+    Complete,
 }
 
 impl TryFrom<&str> for Command {
@@ -28,6 +31,7 @@ impl TryFrom<&str> for Command {
             "add" => Ok(Command::Add),
             "list" => Ok(Command::List),
             "delete" => Ok(Command::Delete),
+            "complete" => Ok(Command::Complete),
             _ => Err(Error::InvalidInput(String::from(value))),
         }
     }
@@ -45,12 +49,30 @@ pub fn main() {
                 }
                 Err(error) => println!("{}", error),
             },
-            Command::Add => match todo::insert_todo(&opt.file_path, opt.todo) {
-                Ok(TaskStatus::Added) => println!("task added successfully"),
-                Ok(_) => println!("invalid status"),
-                Err(error) => println!("{}", error),
+            Command::Add => match opt.todo {
+                Some(item) => match todo::insert_todo(&opt.file_path, item) {
+                    Ok(TaskStatus::Added) => println!("task added successfully"),
+                    Ok(_) => println!("invalid status"),
+                    Err(error) => println!("{}", error),
+                },
+                None => println!("supply task details with add option"),
             },
-            Command::Delete => println!("yet to be added"),
+            Command::Delete => match opt.id {
+                Some(item) => match todo::delete_todo(&opt.file_path, item.parse().unwrap()) {
+                    Ok(TaskStatus::Deleted) => println!("task deleted successfully"),
+                    Ok(_) => println!("invalid status"),
+                    Err(error) => println!("{}", error),
+                },
+                None => println!("supply todo id which needs to be deleted"),
+            },
+            Command::Complete => match opt.id {
+                Some(item) => match todo::complete_todo(&opt.file_path, item.parse().unwrap()) {
+                    Ok(TaskStatus::Marked) => println!("task marked successfully"),
+                    Ok(_) => println!("invalid status while updating"),
+                    Err(error) => println!("{}", error),
+                },
+                None => println!("supply todo id which needs to be deleted"),
+            },
             _ => println!("come back later"),
         },
         Err(error) => println!("error encountered"),

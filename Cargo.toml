@@ -1,7 +1,7 @@
 [package]
 name = "todo"
 version = "0.1.0"
-authors = ["hilesh aswani <hilesh.aswani@startv.com>"]
+authors = ["hilesh aswani <hilesh.aswani@abcdef.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
